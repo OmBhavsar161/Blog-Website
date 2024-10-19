@@ -7,52 +7,49 @@ export default function Navbar() {
 
     return (
         <>
-        <nav className="bg-grey text- w-full shadow-md fixed top-0 z-50">
+        <nav className="bg-[#d6dd77] text-black text-xl font-medium w-full  shadow-md fixed top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
 
-                {/* Left Side - Logo and Write */}
-                <div className="flex items-center space-x-8"> {/* Added more space between logo and write */}
-                    {/* Logo */}
+                {/* Left Side - Logo, Snow, Home, Write, Sign In, Sign Up */}
+                <div className="flex items-center space-x-8">
+                    {/* Logo and Snow Name */}
                     <Link to="/" className="flex items-center">
                         <img src={logo} alt="logo" className="h-8 w-auto" />
+                        <span className="text-3xl text-slate-700 font-bold ml-2">Snow</span> {/* Add "Snow" next to the logo */}
                     </Link>
 
-                    {/* Editor Link */}
-                    {/* Write Link */}
-        <Link to="/editor" className="flex items-center space-x-1 text-gray-500 hover:text-indigo-600">
-          <i className="text-xl">✍️</i>
-          <p className="hidden md:block">Write</p>
-        </Link>
+                    {/* Home Link */}
+                    <Link to="/" className="text-black hover:text-orange-500 bg ">
+                        Home
+                    </Link>
 
-                    {/* Search Bar */}
-                    <div className={`relative w-56 hidden sm:block`}>
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            className="w-full p-2 pr-10 bg-gray-100 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <i className="fas fa-search absolute right-3 top-2.5 text-gray-500"></i>
-                    </div>
+                    {/* Write Link */}
+                    <Link to="/editor" className="text-black hover:text-orange-500 flex items-center space-x-1">
+                        <i className="text-xl">✍️</i>
+                        <p>Write</p>
+                    </Link>
+
+                    {/* Sign In */}
+                    <Link to="/signin" className="text-black hover:text-orange-500 px-4 py-1">
+                        Sign In
+                    </Link>
+
+                    {/* Sign Up */}
+                    <Link to="/signup" className="text-black hover:text-orange-500 px-4 py-1">
+                        Sign Up
+                    </Link>
                 </div>
 
-                {/* Right Side - Sign In and Sign Up */}
-                <div className="flex items-center space-x-4">
-                    {/* Sign In */}
-                    {/* Sign In Button */}
-        <Link
-          to="/signin"
-          className="px-4 py-1 border border-gray-400 rounded-full hover:bg-gray-100 transition-colors"
-        >
-          Sign In
-        </Link>
-
-        {/* Sign Up Button */}
-        <Link
-          to="/signup"
-          className="px-4 py-1 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
-        >
-          Sign Up
-        </Link>
+                {/* Right Side - Search Bar */}
+                <div className="relative w-56">
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        className="w-full p-2 pr-10 bg-gray-200 border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none"
+                    />
+                    <button className="absolute right-0 top-0 bottom-0 text-white p-2">
+                        <i className="fas fa-search"></i>
+                    </button>
                 </div>
 
                 {/* Toggle Search for Mobile */}
@@ -70,17 +67,19 @@ export default function Navbar() {
                             <input
                                 type="text"
                                 placeholder="Search"
-                                className="w-full p-2 pr-10 bg-gray-100 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full p-2 pr-10 bg-gray-200 border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none"
                             />
-                            <i className="fas fa-search absolute right-3 top-2.5 text-gray-500"></i>
+                            <button className="absolute right-0 top-0 bottom-0 bg-orange-500 text-white p-2">
+                                <i className="fas fa-search"></i>
+                            </button>
                         </div>
                     </div>
                 )}
             </div>
         </nav>
-        <div className="mt-16"> {/* Added margin to prevent content overlap with the navbar */}
-                <Outlet />
-            </div>
+        <div className="mt-16">
+            <Outlet />
+        </div>
         </>
     );
 }
