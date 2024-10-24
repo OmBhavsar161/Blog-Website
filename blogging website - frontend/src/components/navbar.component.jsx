@@ -7,7 +7,7 @@ export default function Navbar() {
 
     return (
         <>
-        <nav className="bg-[#d6dd77] text-black text-xl font-medium w-full  shadow-md fixed top-0 z-50">
+        <nav className="bg-[#2bd1e7] text-black text-xl font-medium w-full  shadow-md fixed top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
 
                 {/* Left Side - Logo, Snow, Home, Write, Sign In, Sign Up */}
@@ -15,27 +15,27 @@ export default function Navbar() {
                     {/* Logo and Snow Name */}
                     <Link to="/" className="flex items-center">
                         <img src={logo} alt="logo" className="h-8 w-auto" />
-                        <span className="text-3xl text-slate-700 font-bold ml-2">Snow</span> {/* Add "Snow" next to the logo */}
+                        <span className="text-3xl text-slate-800 font-bold ml-2">Snow</span> {/* Add "Snow" next to the logo */}
                     </Link>
 
                     {/* Home Link */}
-                    <Link to="/" className="text-black hover:text-orange-500 bg ">
+                    <Link to="/" className="text-black hover:opacity-[60%]">
                         Home
                     </Link>
 
                     {/* Write Link */}
-                    <Link to="/editor" className="text-black hover:text-orange-500 flex items-center space-x-1">
+                    <Link to="/editor" className="text-black hover:opacity-[60%] flex items-center space-x-1">
                         <i className="text-xl">✍️</i>
                         <p>Write</p>
                     </Link>
 
                     {/* Sign In */}
-                    <Link to="/signin" className="text-black hover:text-orange-500 px-4 py-1">
+                    <Link to="/signin" className="text-black hover:opacity-[60%] px-4 py-1">
                         Sign In
                     </Link>
 
                     {/* Sign Up */}
-                    <Link to="/signup" className="text-black hover:text-orange-500 px-4 py-1">
+                    <Link to="/signup" className="text-black hover:opacity-[60%] px-4 py-1">
                         Sign Up
                     </Link>
                 </div>
