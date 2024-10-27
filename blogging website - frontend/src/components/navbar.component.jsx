@@ -13,7 +13,7 @@ export default function Navbar() {
                 {/* Left Side - Logo, Snow, Home, Write, Sign In, Sign Up */}
                 <div className="flex items-center space-x-8">
                     {/* Logo and Snow Name */}
-                    <Link to="/" className="flex items-center">
+                    <Link to="/" className="flex items-center ml-[-50px] mr-[60px]">
                         <img src={logo} alt="logo" className="h-8 w-auto" />
                         <span className="text-3xl text-slate-800 font-bold ml-2">Snow</span> {/* Add "Snow" next to the logo */}
                     </Link>
@@ -30,12 +30,12 @@ export default function Navbar() {
                     </Link>
 
                     {/* Sign In */}
-                    <Link to="/signin" className="text-black hover:opacity-[60%] px-4 py-1">
+                    <Link to="/signin" className="text-black hover:opacity-[70%] px-4 py-2 bg-cyan-500 rounded-lg">
                         Sign In
                     </Link>
 
                     {/* Sign Up */}
-                    <Link to="/signup" className="text-black hover:opacity-[60%] px-4 py-1">
+                    <Link to="/signup" className="text-gray-900 hover:opacity-[70%] px-4 py-2 bg-cyan-200 rounded-lg">
                         Sign Up
                     </Link>
                 </div>
