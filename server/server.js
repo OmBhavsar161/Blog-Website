@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 import cors from "cors"; // Import cors
 
 const server = express();
-let PORT = 3000;
+let PORT = 4000;
 
 // Enable CORS for all origins
 server.use(cors());
