@@ -103,7 +103,7 @@ server.post("/signup", async (req, res) => {
 
 server.post("/signin", async (req, res) => {
   const { email, password } = req.body;
-
+ 
   try {
     const user = await User.findOne({ "personal_info.email": email });
     if (!user) {

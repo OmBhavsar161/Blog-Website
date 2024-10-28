@@ -14,7 +14,7 @@ export default function UserAuthForm({ type }) {
   const { userAuth: { access_token }, setUserAuth } = useContext(UserContext);
 
   const [formData, setFormData] = useState({
-    fullName: '',
+    fullname: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -35,9 +35,9 @@ export default function UserAuthForm({ type }) {
   };
 
   const validateForm = () => {
-    const { fullName, email, password, confirmPassword } = formData;
+    const { fullname, email, password, confirmPassword } = formData;
 
-    if (type !== 'sign-in' && fullName.length < 3) {
+    if (type !== 'sign-in' && fullname.length < 3) {
       toast.error('Full name must be at least 3 characters long.');
       return false;
     }
@@ -73,7 +73,7 @@ export default function UserAuthForm({ type }) {
       email: formData.email,
       password: formData.password,
     } : {
-      fullName: formData.fullName,
+      fullname: formData.fullname,
       email: formData.email,
       password: formData.password,
     };
@@ -123,9 +123,9 @@ export default function UserAuthForm({ type }) {
           <InputBox
             label="Full Name"
             type="text"
-            id="fullName"
+            id="fullname"
             placeholder="John Doe"
-            value={formData.fullName}
+            value={formData.fullname}
             onChange={handleChange}
           />
         )}
