@@ -9,6 +9,23 @@ export default function UserAuthForm({ type }) {
   const authForm = useRef();
   const navigate = useNavigate(); // Initialize the useNavigate hook for navigation
 
+  let { userAuth: { access_token}, setUserAuth} = useContext(UserContext)
+
+  console.log(access_token)
+
+  const userAuthThroughServer = (serverRoute, formData)=> {
+
+    axios.post(import.meta.env.VITE_SERVER_DOMAIN +serverRoute,formData)
+    .then(({data}) => {
+      storeInSession("user", JSON.stringify(data))
+      setUserAuth(data)
+
+    })
+    .catch(({response})=> {
+      toast.error(response.data.error)
+    })
+  }
+
   // State for form inputs, error messages, and password visibility
   const [formData, setFormData] = useState({
     fullName: '',
@@ -109,6 +126,8 @@ export default function UserAuthForm({ type }) {
   };
 
   return (
+    access_token ? 
+    <Navigate to='/'/> :
     <section className="flex items-center justify-center min-h-screen bg-gray-100">
       <form ref={authForm} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md" onSubmit={handleSubmit}>
         <h1 className="text-2xl font-bold text-center mb-6">

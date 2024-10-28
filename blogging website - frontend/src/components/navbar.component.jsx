@@ -1,9 +1,27 @@
 import logo from '../imgs/logo.png';
 import { Link, Outlet } from 'react-router-dom';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { UserContext } from '../App';
+import UserNavigationPanel from './user-navigation.component';
 
 export default function Navbar() {
     const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
+
+    const [ userNavPanel, setUserNavPanel ] = useState(false)
+
+  const { userAuth, userAuth: { access_token, profile_img
+  }} = useContext(UserContext)
+
+  const handleUserNavPanel = () => {
+    setUserNavPanel(currentVal => !currentVal)
+  }
+
+  const handleBlur = () => {
+    setTimeout(()=> {
+      setUserNavPanel(false)
+    },200)
+    
+  }
 
     return (
         <>
@@ -29,8 +47,31 @@ export default function Navbar() {
                         <p>Write</p>
                     </Link>
 
-                    {/* Sign In */}
-                    <Link to="/signin" className="text-black hover:opacity-[70%] px-4 py-2 bg-cyan-500 rounded-lg">
+                    {
+          access_token ? 
+          <>
+          <Link to="/dashboard/notification" >
+          <button className='w-12 h-12 rounded-full'>
+            <i className="fi fi-rr-bell text-2xl block mt-1"></i>
+          </button>
+          </Link>
+
+          <div className="relative" onClick={handleUserNavPanel} onBlur={handleBlur} >
+            <button className="w-12 h-12 mt-1">
+              <img src={profile_img} className='w-full h-full object-cover rounded-full' />
+            </button>
+
+            {
+              userNavPanel ? <UserNavigationPanel />  : ""
+            }
+          </div>
+          </>
+          :
+          <>
+            {/* Sign In and Sign Up Section */}
+        <div className="flex items-center space-x-6 mr-4">
+           {/* Sign In */}
+           <Link to="/signin" className="text-black hover:opacity-[70%] px-4 py-2 bg-cyan-500 rounded-lg">
                         Sign In
                     </Link>
 
@@ -38,6 +79,11 @@ export default function Navbar() {
                     <Link to="/signup" className="text-gray-900 hover:opacity-[70%] px-4 py-2 bg-cyan-200 rounded-lg">
                         Sign Up
                     </Link>
+        </div>
+          </>
+        }
+
+                   
                 </div>
 
                 {/* Right Side - Search Bar */}
