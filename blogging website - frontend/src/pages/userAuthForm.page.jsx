@@ -1,36 +1,18 @@
 import React, { useState, useRef, useContext } from 'react';
-import InputBox from '../components/input.component'; // Ensure this is the correct path
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
+import InputBox from '../components/input.component';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook for redirection
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate, Navigate } from 'react-router-dom'; // Ensure Navigate is imported
 import { UserContext } from '../App';
 import { storeInSession } from '../common/session';
-
-
+import axios from 'axios';
 
 export default function UserAuthForm({ type }) {
   const authForm = useRef();
-  const navigate = useNavigate(); // Initialize the useNavigate hook for navigation
+  const navigate = useNavigate();
+  const { userAuth: { access_token }, setUserAuth } = useContext(UserContext);
 
-  let { userAuth: { access_token}, setUserAuth} = useContext(UserContext)
-
-  console.log(access_token)
-
-  const userAuthThroughServer = (serverRoute, formData)=> {
-
-    axios.post(import.meta.env.VITE_SERVER_DOMAIN +serverRoute,formData)
-    .then(({data}) => {
-      storeInSession("user", JSON.stringify(data))
-      setUserAuth(data)
-
-    })
-    .catch(({response})=> {
-      toast.error(response.data.error)
-    })
-  }
-
-  // State for form inputs, error messages, and password visibility
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -38,14 +20,12 @@ export default function UserAuthForm({ type }) {
     confirmPassword: ''
   });
 
-  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for toggling confirm password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Regex patterns for validation
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
-  // Function to handle form input change
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -54,7 +34,6 @@ export default function UserAuthForm({ type }) {
     }));
   };
 
-  // Validate form inputs before submitting
   const validateForm = () => {
     const { fullName, email, password, confirmPassword } = formData;
 
@@ -86,59 +65,60 @@ export default function UserAuthForm({ type }) {
     return true;
   };
 
-  // Function to handle form submission
+  const userAuthThroughServer = async (serverRoute) => {
+    const url = import.meta.env.VITE_SERVER_DOMAIN + serverRoute;
+    console.log('Making request to:', url); // Check if the URL is correct
+
+    const payload = type === 'sign-in' ? {
+      email: formData.email,
+      password: formData.password,
+    } : {
+      fullName: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+    };
+
+    try {
+      const { data } = await axios.post(url, payload);
+      storeInSession("user", JSON.stringify(data));
+      setUserAuth(data);
+      toast.success(type === 'sign-in' ? 'Signed in successfully!' : 'Signed up successfully!');
+
+      if (type === 'sign-up') {
+        navigate('/signin'); // Redirect to sign-in page after successful sign-up
+      } else {
+        navigate('/editor'); // Redirect to dashboard after successful sign-in
+      }
+    } catch (error) {
+      console.error('Error response:', error.response ? error.response.data : 'No response');
+      const errorMessage = error.response?.data?.error || 'An unknown error occurred.';
+      toast.error(errorMessage);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Validate form before making a request
+    
     if (!validateForm()) {
       return;
     }
 
-    const url = type === 'sign-in' ? 'http://localhost:3000/signin' : 'http://localhost:3000/signup';
-
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        fullname: formData.fullName,
-        email: formData.email,
-        password: formData.password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          toast.error(data.error);
-        } else {
-          toast.success(type === 'sign-in' ? 'Signed in successfully!' : 'Signed up successfully!');
-
-          // Redirect after successful sign-up or sign-in
-          if (type === 'sign-up') {
-            navigate('/signin'); // Redirect to sign-in page after successful sign-up
-          } else {
-            navigate('/editor'); // Redirect to dashboard after successful sign-in
-          }
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        toast.error('An error occurred. Please try again.');
-      });
+    const serverRoute = type === 'sign-in' ? '/signin' : '/signup';
+    
+    userAuthThroughServer(serverRoute);
   };
 
+  if (access_token) {
+    return <Navigate to='/' />;
+  }
+
   return (
-    access_token ? 
-    <Navigate to='/'/> :
     <section className="flex items-center justify-center min-h-screen bg-gray-100">
       <form ref={authForm} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md" onSubmit={handleSubmit}>
         <h1 className="text-2xl font-bold text-center mb-6">
           {type === 'sign-in' ? 'Welcome Back' : 'Join Us Today'}
         </h1>
 
-        {/* Only show Full Name field in the sign-up form */}
         {type !== 'sign-in' && (
           <InputBox
             label="Full Name"
@@ -150,7 +130,6 @@ export default function UserAuthForm({ type }) {
           />
         )}
 
-        {/* Email input for both sign-in and sign-up */}
         <InputBox
           label="Email"
           type="email"
@@ -160,7 +139,6 @@ export default function UserAuthForm({ type }) {
           onChange={handleChange}
         />
 
-        {/* Password input for both sign-in and sign-up */}
         <div className="relative">
           <InputBox
             label="Password"
@@ -179,7 +157,6 @@ export default function UserAuthForm({ type }) {
           </button>
         </div>
 
-        {/* Confirm password field only for sign-up */}
         {type !== 'sign-in' && (
           <div className="relative">
             <InputBox
@@ -200,7 +177,6 @@ export default function UserAuthForm({ type }) {
           </div>
         )}
 
-        {/* Submit button */}
         <div className="flex items-center justify-between">
           <button
             type="submit"
@@ -210,27 +186,21 @@ export default function UserAuthForm({ type }) {
           </button>
         </div>
 
-        {/* Conditional link for toggling between sign-in and sign-up */}
         <div className="mt-4 text-center">
           {type === 'sign-in' ? (
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <a href="/signup" className="text-indigo-500 hover:underline">
-                Sign up
-              </a>
+              <a href="/signup" className="text-indigo-500 hover:underline">Sign up</a>
             </p>
           ) : (
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <a href="/signin" className="text-indigo-500 hover:underline">
-                Log in
-              </a>
+              <a href="/signin" className="text-indigo-500 hover:underline">Log in</a>
             </p>
           )}
         </div>
       </form>
 
-      {/* Toast container for notifications */}
       <ToastContainer />
     </section>
   );
