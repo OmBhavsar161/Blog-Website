@@ -1,9 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import InputBox from '../components/input.component'; // Ensure this is the correct path
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook for redirection
+import { UserContext } from '../App';
+import { storeInSession } from '../common/session';
+
+
 
 export default function UserAuthForm({ type }) {
   const authForm = useRef();
